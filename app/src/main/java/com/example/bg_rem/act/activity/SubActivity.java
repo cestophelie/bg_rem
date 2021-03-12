@@ -44,6 +44,11 @@ public class SubActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+        //
+        Intent myIntent = getIntent(); // gets the previously created intent
+        String userId = myIntent.getStringExtra("firstKeyName");
+        Log.d(TAG,"RECEIVED KEY in SubActivity " + userId);
+
         ImageSend_ = findViewById(R.id.ImageSend);
         ImageSend_.setEnabled(false);
         ImageSend_.setOnClickListener(new View.OnClickListener(){
@@ -117,7 +122,7 @@ public class SubActivity extends AppCompatActivity {
 
         // Retrofit 객체를 생성하고 이 객체를 이용해서, API service 를 create 해준다.
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://74af883dddb7.ngrok.io")
+                .baseUrl("https://d016c362b8af.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
 

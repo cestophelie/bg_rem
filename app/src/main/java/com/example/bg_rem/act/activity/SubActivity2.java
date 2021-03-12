@@ -36,7 +36,7 @@ import com.example.bg_rem.act.model.Image;
 
 public class SubActivity2 extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
-    private static final String endpoint = "https://74af883dddb7.ngrok.io/posts/?format=json";
+    private static final String endpoint = "https://d016c362b8af.ngrok.io/posts/?format=json";
     private ArrayList<Image> images;
     private ProgressDialog pDialog;
     private GalleryAdapter mAdapter;

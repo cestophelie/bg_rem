@@ -42,6 +42,13 @@ public interface MyAPI{
             @Part("password") RequestBody param2
     );
 
+    @Multipart
+    @POST("/check/")
+    Call<ResponseBody> post_check(
+            @Part("checkID") RequestBody param1,
+            @Part("checkPW") RequestBody param2
+    );
+
     @PATCH("/posts/{pk}/")
     Call<PostItem> patch_posts(@Path("pk") int pk, @Body PostItem post);
 

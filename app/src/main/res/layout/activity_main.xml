@@ -7,7 +7,7 @@
     tools:context=".act.activity.MainActivity">
 
     <EditText
-        android:id="@+id/et_id"
+        android:id="@+id/checkID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/et_pass"
+        android:id="@+id/checkPW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -34,9 +34,9 @@
         android:ems="10"
         android:hint="비밀번호"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/et_id"
-        app:layout_constraintStart_toStartOf="@+id/et_id"
-        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+        app:layout_constraintEnd_toEndOf="@+id/checkID"
+        app:layout_constraintStart_toStartOf="@+id/checkID"
+        app:layout_constraintTop_toBottomOf="@+id/checkID" />
 
     <Button
         android:id="@+id/btn_login"
@@ -44,9 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="로그인"
-        app:layout_constraintEnd_toEndOf="@+id/et_pass"
-        app:layout_constraintStart_toStartOf="@+id/et_pass"
-        app:layout_constraintTop_toBottomOf="@+id/et_pass" />
+        app:layout_constraintEnd_toEndOf="@+id/checkPW"
+        app:layout_constraintStart_toStartOf="@+id/checkPW"
+        app:layout_constraintTop_toBottomOf="@+id/checkPW" />
 
     <Button
         android:id="@+id/btn_register"
