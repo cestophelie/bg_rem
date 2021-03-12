@@ -21,7 +21,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//is it working?
+//is it working? nope..
 public class MakeAccount extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private EditText identify;
