@@ -2,6 +2,7 @@ package com.example.bg_rem.act.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.bg_rem.R;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,8 +80,10 @@ public class SubActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data); // 이 부분 추가함.
-
         Log.d(TAG,"HERE : " + requestCode);
+        int imgWidth;
+        int imgHeight;
+        int value;
 
         if (requestCode != 1 || resultCode != RESULT_OK) {
             return;
@@ -95,20 +99,75 @@ public class SubActivity extends AppCompatActivity {
             Log.d(TAG,"QUIO!! : " + dataUri.toString());
             InputStream in = getContentResolver().openInputStream(dataUri); // data.getData()
             Bitmap image = BitmapFactory.decodeStream(in);
+//            Bitmap newImage = resizeBitmap(image, 300);
+            Bitmap newImage = resize(getApplicationContext(), dataUri, 200);
 
-            imgVwSelected_.setImageBitmap(image); // 이 부분이 실제 이미지 출력되는 코드.
+            imgVwSelected_.setImageBitmap(newImage); // 이 부분이 실제 이미지 출력되는 코드.
             Log.d(TAG,"WORKING!! : ");
 
             in.close();
+
             tempSelectFile = new File(getFilesDir(), "hihi.jpeg");
             OutputStream out = new FileOutputStream(tempSelectFile);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            newImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         ImageSend_.setEnabled(true);  // 이 부분이 이렇게 바뀌었을 때만 데이터 전송이 이루어 진다.
         imgVwSelected_.setImageURI(data.getData());
+    }
+
+    private Bitmap resize(Context context, Uri uri, int resize){
+        Bitmap resizeBitmap=null;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        try {
+            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); // 1번
+
+            int width = options.outWidth;
+            int height = options.outHeight;
+            int samplesize = 1;
+
+            while (true) {//2번
+                if (width / 2 < resize || height / 2 < resize)
+                    break;
+                width /= 2;
+                height /= 2;
+                samplesize *= 2;
+            }
+
+            options.inSampleSize = samplesize;
+            Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); //3번
+            resizeBitmap=bitmap;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        int width = resizeBitmap.getWidth();
+        int height = resizeBitmap.getHeight();
+        Log.d(TAG,"New image width" + width);
+        Log.d(TAG,"New image height" + height);
+        return resizeBitmap;
+    }
+
+    private Bitmap resizeBitmap(Bitmap getBitmap, int maxSize) {
+        int width = getBitmap.getWidth();
+        int height = getBitmap.getHeight();
+        double x;
+
+        if (width >= height && width > maxSize) {
+            x = width / height;
+            width = maxSize;
+            height = (int) (maxSize / x);
+        } else if (height >= width && height > maxSize) {
+            x = height / width;
+            height = maxSize;
+            width = (int) (maxSize / x);
+        }
+        Log.d(TAG,"New image width" + width);
+        Log.d(TAG,"New image height" + height);
+        return Bitmap.createScaledBitmap(getBitmap, width, height, false);
     }
 
     private void uploadImage(String userId) {
@@ -123,7 +182,7 @@ public class SubActivity extends AppCompatActivity {
 
         // Retrofit 객체를 생성하고 이 객체를 이용해서, API service 를 create 해준다.
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://4903acad6ae0.ngrok.io")
+                .baseUrl("https://b225422a1781.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
 
