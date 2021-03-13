@@ -55,7 +55,7 @@ public class SubActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 //여기서 upload image 메소드 호출
-                uploadImage();
+                uploadImage(userId);
             }
         });
         //
@@ -111,8 +111,9 @@ public class SubActivity extends AppCompatActivity {
         imgVwSelected_.setImageURI(data.getData());
     }
 
-    private void uploadImage() {
-        RequestBody title = RequestBody.create(MediaType.parse("text/plain"), "sewoni");
+    private void uploadImage(String userId) {
+        // 여기서 해당 userId를 같이 전송한다.
+        RequestBody title = RequestBody.create(MediaType.parse("text/plain"), userId);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), tempSelectFile);
         MultipartBody.Part parts = MultipartBody.Part.createFormData("image", tempSelectFile.getName(), requestBody);
@@ -122,7 +123,7 @@ public class SubActivity extends AppCompatActivity {
 
         // Retrofit 객체를 생성하고 이 객체를 이용해서, API service 를 create 해준다.
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://d016c362b8af.ngrok.io")
+                .baseUrl("https://4903acad6ae0.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
 

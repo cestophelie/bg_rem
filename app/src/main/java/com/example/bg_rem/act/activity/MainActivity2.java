@@ -41,6 +41,7 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent2 = new Intent(getApplicationContext(), SubActivity2.class);
+                intent2.putExtra("secondKeyName", userId);
                 startActivity(intent2);
             }
 

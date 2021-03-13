@@ -2,6 +2,7 @@ package com.example.bg_rem.act.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +37,7 @@ import com.example.bg_rem.act.model.Image;
 
 public class SubActivity2 extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
-    private static final String endpoint = "https://d016c362b8af.ngrok.io/posts/?format=json";
+    private static final String endpoint = "https://4903acad6ae0.ngrok.io/posts/?format=json";
     private ArrayList<Image> images;
     private ProgressDialog pDialog;
     private GalleryAdapter mAdapter;
@@ -47,6 +48,10 @@ public class SubActivity2 extends AppCompatActivity {
         Log.d(TAG,"WORKING 11111");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub2);
+
+        Intent myIntent = getIntent(); // gets the previously created intent
+        String userId = myIntent.getStringExtra("secondKeyName");
+        Log.d(TAG,"RECEIVED KEY in SubActivity2 " + userId);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,10 +68,10 @@ public class SubActivity2 extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        fetchImages();
+        fetchImages(userId);
     }
 
-    private void fetchImages() {
+    private void fetchImages(String userId) {
 
         pDialog.setMessage("Downloading json...");
         pDialog.show();
@@ -75,7 +80,7 @@ public class SubActivity2 extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d(TAG, "sewoni" + response.toString());
+                        Log.d(TAG, "Received JSON from server" + response.toString());
                         pDialog.hide();
 
                         images.clear();
@@ -84,11 +89,13 @@ public class SubActivity2 extends AppCompatActivity {
                                 JSONObject object = response.getJSONObject(i);
                                 Image image = new Image();
                                 // 여기에 if id가 일치하면, 코드를 넣어줄 수 있을 듯.
-                                image.setName(object.getString("title"));
-                                image.setImage(object.getString("image"));
+                                if (object.getString("title").equals(userId)) {
+                                    image.setName(object.getString("title"));
+                                    image.setImage(object.getString("image"));
 
-                                images.add(image);
-                                // 여기까지
+                                    images.add(image);
+                                }
+
 
                             } catch (JSONException e) {
                                 Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -108,25 +115,4 @@ public class SubActivity2 extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req);
     }
-    /*private final String TAG = getClass().getSimpleName();
-    private Button button_;
-    private ImageView imageView_;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sub2);
-
-        button_ = findViewById(R.id.button1);
-        button_.setOnClickListener(new View.OnClickListener() {
-        // 버튼 클릭 시, Glide 라이브러리를 사용해 ImageView 에 띄우기
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG,"WORKING 11111");
-                imageView_ = findViewById(R.id.imageView);
-                Glide.with(view).load("https://08788d393d62.ngrok.io/media/fwqyk.png").into(imageView_);
-                Log.d(TAG,"WORKING 22222");
-            }
-        });
-    }*/
 }

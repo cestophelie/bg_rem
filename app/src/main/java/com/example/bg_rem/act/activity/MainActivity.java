@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         makeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 회원가입 페이지로 넘어간다.
                 Intent intent2 = new Intent(getApplicationContext(), MakeAccount.class);
                 startActivity(intent2);
             }
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Retrofit 객체 생성
         Retrofit.Builder builder3 = new Retrofit.Builder()
-                .baseUrl("https://d016c362b8af.ngrok.io")
+                .baseUrl("https://4903acad6ae0.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit3 = builder3.build();
 
