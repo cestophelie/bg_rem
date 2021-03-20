@@ -1,12 +1,16 @@
 package com.example.bg_rem.act.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.bg_rem.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -39,7 +44,7 @@ public class SubActivity extends AppCompatActivity {
     ImageView imgVwSelected_;
     private Button ImageSend_, ImageSelection_;
     File tempSelectFile;
-    Uri finalUri;
+//    Uri finalUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,7 @@ public class SubActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data); // 이 부분 추가함.
@@ -89,7 +95,7 @@ public class SubActivity extends AppCompatActivity {
             return;
         }
         Uri dataUri = data.getData();
-        finalUri = dataUri;
+//        finalUri = dataUri;
         Log.d(TAG,"URI!! --------- : " + dataUri.toString());
         imgVwSelected_.setImageURI(dataUri); // 밑에 inputstream 파라미터도 바꿈
 
@@ -97,19 +103,20 @@ public class SubActivity extends AppCompatActivity {
             //imageview 에 이미지 출력
             Log.d(TAG,"WORKING!! : ");
             Log.d(TAG,"QUIO!! : " + dataUri.toString());
-            InputStream in = getContentResolver().openInputStream(dataUri); // data.getData()
-            Bitmap image = BitmapFactory.decodeStream(in);
+//            InputStream in = getContentResolver().openInputStream(dataUri); // data.getData()
+//            Bitmap image = BitmapFactory.decodeStream(in);
 //            Bitmap newImage = resizeBitmap(image, 300);
-            Bitmap newImage = resize(getApplicationContext(), dataUri, 200);
-
-            imgVwSelected_.setImageBitmap(newImage); // 이 부분이 실제 이미지 출력되는 코드.
+//            Bitmap newImage = resize(getApplicationContext(), dataUri, 200);  // 이미지 resize 용도로는 이걸 사용했었음.
+            Bitmap finalImg = getBitmapFromGalleryUri(getApplicationContext(), dataUri, 300.);
+// -----------------
+            imgVwSelected_.setImageBitmap(finalImg); // 이 부분이 실제 이미지 출력되는 코드.
             Log.d(TAG,"WORKING!! : ");
 
-            in.close();
+//            in.close();
 
             tempSelectFile = new File(getFilesDir(), "hihi.jpeg");
             OutputStream out = new FileOutputStream(tempSelectFile);
-            newImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            finalImg.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -117,6 +124,89 @@ public class SubActivity extends AppCompatActivity {
         ImageSend_.setEnabled(true);  // 이 부분이 이렇게 바뀌었을 때만 데이터 전송이 이루어 진다.
         imgVwSelected_.setImageURI(data.getData());
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Bitmap getBitmapFromGalleryUri(Context mContext, Uri uri, Double maxSize)throws IOException {
+        int orientation = 0;
+
+        InputStream input = mContext.getContentResolver().openInputStream(uri);
+        if (input != null){
+            ExifInterface exif = new ExifInterface(input);
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            input.close();
+        }
+
+
+        input = mContext.getContentResolver().openInputStream(uri);
+
+        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+        onlyBoundsOptions.inJustDecodeBounds = true;
+        onlyBoundsOptions.inDither = true;//optional
+        onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
+        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+        try {
+            input.close();
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1)) {
+            return null;
+        }
+
+        int originalSize = Math.max(onlyBoundsOptions.outHeight, onlyBoundsOptions.outWidth);
+
+        double ratio = (originalSize > maxSize) ? (originalSize / maxSize) : 1.0;
+
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+        bitmapOptions.inDither = true; //optional
+        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//
+        input = mContext.getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+        try {
+            input.close();
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        Matrix matrix = new Matrix();
+        int rotationInDegrees = exifToDegrees(orientation);
+
+        if (orientation != 0) {
+            matrix.preRotate(rotationInDegrees);
+        }
+
+        int bmpWidth = 0;
+        try {
+            bmpWidth = bitmap.getWidth();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        Bitmap adjustedBitmap = bitmap;
+        if (bmpWidth > 0) {
+            adjustedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        }
+
+        return adjustedBitmap;
+
+    }
+    private static int getPowerOfTwoForSampleRatio(double ratio){
+        int k = Integer.highestOneBit((int)Math.floor(ratio));
+        if(k==0) return 1;
+        else return k;
+    }
+
+    public static int exifToDegrees(int exifOrientation) {
+        // 이미지 orientation (회전 여부와 정도 리턴)
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
+    }
+
 
     private Bitmap resize(Context context, Uri uri, int resize){
         Bitmap resizeBitmap=null;
@@ -135,6 +225,7 @@ public class SubActivity extends AppCompatActivity {
                 width /= 2;
                 height /= 2;
                 samplesize *= 2;
+
             }
 
             options.inSampleSize = samplesize;
@@ -144,6 +235,7 @@ public class SubActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        // 이미지 크기 측정 코드 추가
         int width = resizeBitmap.getWidth();
         int height = resizeBitmap.getHeight();
         Log.d(TAG,"New image width" + width);
@@ -182,7 +274,7 @@ public class SubActivity extends AppCompatActivity {
 
         // Retrofit 객체를 생성하고 이 객체를 이용해서, API service 를 create 해준다.
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://b225422a1781.ngrok.io")
+                .baseUrl("https://f40568367d83.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
 

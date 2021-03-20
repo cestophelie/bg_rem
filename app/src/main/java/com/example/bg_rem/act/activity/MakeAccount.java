@@ -57,7 +57,7 @@ public class MakeAccount extends AppCompatActivity {
 
         // Retrofit 객체 생성
         Retrofit.Builder builder2 = new Retrofit.Builder()
-                .baseUrl("https://b225422a1781.ngrok.io")
+                .baseUrl("https://f40568367d83.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit2 = builder2.build();
 

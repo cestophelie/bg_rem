@@ -37,7 +37,8 @@ import com.example.bg_rem.act.model.Image;
 
 public class SubActivity2 extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
-    private static final String endpoint = "https://b225422a1781.ngrok.io/posts/?format=json";
+    // 여기 호스트 주소를 aws 주소로 바꿔줘야 한다.
+    private static final String endpoint = "https://f40568367d83.ngrok.io/posts/?format=json";
     private ArrayList<Image> images;
     private ProgressDialog pDialog;
     private GalleryAdapter mAdapter;
