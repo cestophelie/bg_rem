@@ -38,7 +38,8 @@ import com.example.bg_rem.act.model.Image;
 public class SubActivity2 extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
     // 여기 호스트 주소를 aws 주소로 바꿔줘야 한다.
-    private static final String endpoint = "https://f40568367d83.ngrok.io/posts/?format=json";
+    // http://ec2-13-209-76-218.ap-northeast-2.compute.amazonaws.com:8080
+    private static final String endpoint = "https://fa93740d03cc.ngrok.io/posts/?format=json";
     private ArrayList<Image> images;
     private ProgressDialog pDialog;
     private GalleryAdapter mAdapter;
@@ -73,8 +74,8 @@ public class SubActivity2 extends AppCompatActivity {
     }
 
     private void fetchImages(String userId) {
-
-        pDialog.setMessage("Downloading json...");
+        // 서버로부터 json fetch
+        pDialog.setMessage("Getting images...");
         pDialog.show();
 
         JsonArrayRequest req = new JsonArrayRequest(endpoint,

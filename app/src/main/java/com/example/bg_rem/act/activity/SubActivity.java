@@ -3,6 +3,7 @@ package com.example.bg_rem.act.activity;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +30,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -264,17 +269,37 @@ public class SubActivity extends AppCompatActivity {
 
     private void uploadImage(String userId) {
         // 여기서 해당 userId를 같이 전송한다.
-        RequestBody title = RequestBody.create(MediaType.parse("text/plain"), userId);
+        ProgressDialog dialog = new ProgressDialog(SubActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Image processing...");
 
+        dialog.show();
+
+        RequestBody title = RequestBody.create(MediaType.parse("text/plain"), userId);
+//
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), tempSelectFile);
         MultipartBody.Part parts = MultipartBody.Part.createFormData("image", tempSelectFile.getName(), requestBody);
 
-        Log.d(TAG,"FILE PATH" + tempSelectFile.toString());
+        Log.d(TAG,"FILE PATH" + tempSelectFile);
         Log.d(TAG,"FILE NAME" + tempSelectFile.getName());
+
+//        Intent intent= new Intent(getApplicationContext(), LoadingActivity.class);
+//        intent.putExtra("title", userId);
+//        intent.putExtra("file_path", tempSelectFile);
+//        intent.putExtra("file_name", tempSelectFile.getName());
+//        startActivity(intent);
+
+        // timeout setting 해주기
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
 
         // Retrofit 객체를 생성하고 이 객체를 이용해서, API service 를 create 해준다.
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://f40568367d83.ngrok.io")
+                .baseUrl("https://fa93740d03cc.ngrok.io")
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
 
@@ -282,6 +307,7 @@ public class SubActivity extends AppCompatActivity {
 
         // post 한다는 request를 보내는 부분.
         Call<ResponseBody> call = myAPI.post_posts(title, parts);
+
         // 만약 서버로 부터 response를 받는다면.
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -289,6 +315,9 @@ public class SubActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     Log.d(TAG,"등록 완료");
                     Toast.makeText(getApplicationContext(),"이미지 전송에 성공하였습니다!",Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+//                    finish(intent);
+//                    onBackPressed();
                 }else {
                     Log.d(TAG,"Post Status Code : " + response.code());
                     Log.d(TAG,response.errorBody().toString());
@@ -303,4 +332,17 @@ public class SubActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void startLoading() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Intent intent= new Intent(getApplicationContext(), LoadingActivity.class);
+                startActivity(intent);  //Loagin화면을 띄운다.
+//                finish();   //현재 액티비티 종료
+            }
+        }, 10000); // 화면에 Logo 2초간 보이기
+    }// startLoading Method..
 }

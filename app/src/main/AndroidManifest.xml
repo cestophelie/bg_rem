@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bg_rem"
         android:usesCleartextTraffic="true">
-        <activity android:name=".act.activity.MakeAccount"></activity>
+        <activity android:name=".act.activity.LoadingActivity"></activity>
+        <activity android:name=".act.activity.MakeAccount" />
         <activity android:name=".act.activity.MainActivity2" />
         <activity
             android:name=".ui.login.LoginActivity"
