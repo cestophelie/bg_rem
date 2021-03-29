@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 // LOGIN PAGE
 public class MainActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
-    private final String addr = "https://36fdf584645e.ngrok.io";
+    private final String addr = "https://25c216332f62.ngrok.io";
     ImageView imgVwSelected_;
     private Button login, makeAccount;
     private EditText checkID, checkPW;

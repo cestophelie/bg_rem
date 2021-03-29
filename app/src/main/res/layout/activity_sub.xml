@@ -25,6 +25,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:layout_editor_absoluteY="667dp" />
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/ImageSend"
+        app:layout_constraintStart_toStartOf="@+id/ImageSend"
+        app:layout_constraintTop_toBottomOf="@+id/ImageSend">
+    </Spinner>
+
 
     <ImageView
         android:id="@+id/imgVwSelected"
@@ -40,33 +49,4 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-
-    <!--<Button
-        android:id="@+id/btnImageSelection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:text="select"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="574dp" />
-
-    <ImageView
-        android:id="@+id/imgVwSelected"
-        android:layout_width="379dp"
-        android:layout_height="404dp"
-        android:layout_marginBottom="105dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnImageSelection"
-        tools:layout_editor_absoluteX="16dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    <Button
-        android:id="@+id/btnImageSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:text="send"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="574dp" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

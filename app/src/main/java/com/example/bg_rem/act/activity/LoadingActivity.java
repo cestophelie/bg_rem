@@ -64,7 +64,7 @@ public class LoadingActivity extends AppCompatActivity implements Serializable {
         MyAPI myAPI = retrofit.create(MyAPI.class);
 
         // post 한다는 request를 보내는 부분.
-        Call<ResponseBody> call = myAPI.post_posts(title_, parts);
+        Call<ResponseBody> call = myAPI.post_posts(title_, title_, parts);
         // 만약 서버로 부터 response를 받는다면.
         call.enqueue(new Callback<ResponseBody>() {
             @Override

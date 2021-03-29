@@ -31,7 +31,8 @@ public interface MyAPI{
     @Multipart
     @POST("/posts/")
     Call<ResponseBody> post_posts(
-            @Part("title") RequestBody param,
+            @Part("title") RequestBody param1,
+            @Part("category") RequestBody param2,
             @Part MultipartBody.Part image
     );
 

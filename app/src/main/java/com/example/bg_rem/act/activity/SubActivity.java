@@ -17,8 +17,11 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.bg_rem.R;
@@ -43,13 +46,17 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SubActivity extends AppCompatActivity {
+// IMAGE SEND
+public class SubActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private final String TAG = getClass().getSimpleName();
     ImageView imgVwSelected_;
     private Button ImageSend_, ImageSelection_;
     File tempSelectFile;
     private String addr;
+    Spinner spinner;
+    String[] items;
+    private String category;
 //    Uri finalUri;
 
     @Override
@@ -57,6 +64,14 @@ public class SubActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
 
+        // ComboBox를 위한 spinner
+        spinner = (Spinner)findViewById(R.id.spinner);
+        items = new String[]{"Choose category", "Jacket", "Top", "Bottom", "Accs"};
+        spinner.setOnItemSelectedListener(this);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+//        category = findViewById(R.id.spinner);
         //
         Intent myIntent = getIntent(); // gets the previously created intent
         String userId = myIntent.getStringExtra("firstKeyName");
@@ -70,7 +85,8 @@ public class SubActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 //여기서 upload image 메소드 호출
-                uploadImage(userId);
+//                Log.d(TAG,"SELECTED LIST!!! " + category);
+                uploadImage(userId, category);
             }
         });
         //
@@ -270,7 +286,7 @@ public class SubActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(getBitmap, width, height, false);
     }
 
-    private void uploadImage(String userId) {
+    private void uploadImage(String userId, String category) {
         // 여기서 해당 userId를 같이 전송한다.
         ProgressDialog dialog = new ProgressDialog(SubActivity.this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -279,6 +295,7 @@ public class SubActivity extends AppCompatActivity {
         dialog.show();
 
         RequestBody title = RequestBody.create(MediaType.parse("text/plain"), userId);
+        RequestBody categorySend = RequestBody.create(MediaType.parse("text/plain"), category);
 //
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), tempSelectFile);
         MultipartBody.Part parts = MultipartBody.Part.createFormData("image", tempSelectFile.getName(), requestBody);
@@ -310,7 +327,7 @@ public class SubActivity extends AppCompatActivity {
         MyAPI myAPI = retrofit.create(MyAPI.class);
 
         // post 한다는 request를 보내는 부분.
-        Call<ResponseBody> call = myAPI.post_posts(title, parts);
+        Call<ResponseBody> call = myAPI.post_posts(title, categorySend, parts);
 
         // 만약 서버로 부터 response를 받는다면.
         call.enqueue(new Callback<ResponseBody>() {
@@ -336,4 +353,13 @@ public class SubActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        category = items[position];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //
+    }
 }
