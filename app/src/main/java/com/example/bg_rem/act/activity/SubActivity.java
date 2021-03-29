@@ -49,6 +49,7 @@ public class SubActivity extends AppCompatActivity {
     ImageView imgVwSelected_;
     private Button ImageSend_, ImageSelection_;
     File tempSelectFile;
+    private String addr;
 //    Uri finalUri;
 
     @Override
@@ -59,7 +60,9 @@ public class SubActivity extends AppCompatActivity {
         //
         Intent myIntent = getIntent(); // gets the previously created intent
         String userId = myIntent.getStringExtra("firstKeyName");
+        addr = myIntent.getStringExtra("server_addr");
         Log.d(TAG,"RECEIVED KEY in SubActivity " + userId);
+        Log.d(TAG,"SERVER ADDRESS IN SUB1 " + addr);
 
         ImageSend_ = findViewById(R.id.ImageSend);
         ImageSend_.setEnabled(false);
@@ -283,6 +286,7 @@ public class SubActivity extends AppCompatActivity {
         Log.d(TAG,"FILE PATH" + tempSelectFile);
         Log.d(TAG,"FILE NAME" + tempSelectFile.getName());
 
+        // 별도의 Loading activity 를 호출할 시.
 //        Intent intent= new Intent(getApplicationContext(), LoadingActivity.class);
 //        intent.putExtra("title", userId);
 //        intent.putExtra("file_path", tempSelectFile);
@@ -298,7 +302,7 @@ public class SubActivity extends AppCompatActivity {
 
         // Retrofit 객체를 생성하고 이 객체를 이용해서, API service 를 create 해준다.
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://fa93740d03cc.ngrok.io")
+                .baseUrl(addr)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
@@ -316,8 +320,7 @@ public class SubActivity extends AppCompatActivity {
                     Log.d(TAG,"등록 완료");
                     Toast.makeText(getApplicationContext(),"이미지 전송에 성공하였습니다!",Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
-//                    finish(intent);
-//                    onBackPressed();
+
                 }else {
                     Log.d(TAG,"Post Status Code : " + response.code());
                     Log.d(TAG,response.errorBody().toString());
@@ -333,16 +336,4 @@ public class SubActivity extends AppCompatActivity {
         });
     }
 
-    private void startLoading() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                Intent intent= new Intent(getApplicationContext(), LoadingActivity.class);
-                startActivity(intent);  //Loagin화면을 띄운다.
-//                finish();   //현재 액티비티 종료
-            }
-        }, 10000); // 화면에 Logo 2초간 보이기
-    }// startLoading Method..
 }

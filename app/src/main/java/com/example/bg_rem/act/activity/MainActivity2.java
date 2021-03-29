@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 
+// USER CUSTOMED PAGE
 public class MainActivity2 extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     ImageView imgVwSelected_;
@@ -24,6 +25,7 @@ public class MainActivity2 extends AppCompatActivity {
         //
         Intent myIntent = getIntent(); // gets the previously created intent
         String userId = myIntent.getStringExtra("firstKeyName");
+        String addr = myIntent.getStringExtra("server_addr");
         Log.d(TAG,"RECEIVED KEY in MainActivity2 " + userId);
 
         btnImageSend_ = findViewById(R.id.btnImageSend);
@@ -32,6 +34,7 @@ public class MainActivity2 extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SubActivity.class);
                 intent.putExtra("firstKeyName", userId); // Verify된 경우 userId 다음 액티비티로 전달하기
+                intent.putExtra("server_addr", addr);
                 startActivity(intent);
 
             }
@@ -42,6 +45,7 @@ public class MainActivity2 extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent2 = new Intent(getApplicationContext(), SubActivity2.class);
                 intent2.putExtra("secondKeyName", userId);
+                intent2.putExtra("server_addr", addr);
                 startActivity(intent2);
             }
 

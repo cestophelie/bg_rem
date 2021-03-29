@@ -2,6 +2,7 @@ package com.example.bg_rem.act.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,17 +22,21 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//is it working? nope..
+// MAKING ACCOUNT
 public class MakeAccount extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private EditText identify;
     private EditText password;
     private Button submission;
+    private String addr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_account);
+
+        Intent myIntent = getIntent(); // gets the previously created intent
+        addr = myIntent.getStringExtra("server_addr");
 
         identify = findViewById(R.id.identify);
         password = findViewById(R.id.password);
@@ -57,7 +62,7 @@ public class MakeAccount extends AppCompatActivity {
 
         // Retrofit 객체 생성
         Retrofit.Builder builder2 = new Retrofit.Builder()
-                .baseUrl("https://fa93740d03cc.ngrok.io")
+                .baseUrl(addr)
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit2 = builder2.build();
 

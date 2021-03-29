@@ -23,8 +23,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+// LOGIN PAGE
 public class MainActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
+    private final String addr = "https://36fdf584645e.ngrok.io";
     ImageView imgVwSelected_;
     private Button login, makeAccount;
     private EditText checkID, checkPW;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // 회원가입 페이지로 넘어간다.
                 Intent intent2 = new Intent(getApplicationContext(), MakeAccount.class);
+                intent2.putExtra("server_addr", addr);
                 startActivity(intent2);
             }
 
@@ -69,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Retrofit 객체 생성
         Retrofit.Builder builder3 = new Retrofit.Builder()
-                .baseUrl("https://fa93740d03cc.ngrok.io")
+                .baseUrl(addr)
                 .addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit3 = builder3.build();
 
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 //                     text view 내의 값들이 db에 있는 경우
                      Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
                      intent.putExtra("firstKeyName",userId); // Verify된 경우 userId 다음 액티비티로 전달하기
+                     intent.putExtra("server_addr", addr);
                      startActivity(intent);
                 }else {
                     Log.d(TAG,"Post Status Code ㅠㅠ : " + response.code());

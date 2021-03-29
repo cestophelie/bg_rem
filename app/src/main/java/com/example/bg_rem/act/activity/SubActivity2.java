@@ -34,12 +34,13 @@ import com.example.bg_rem.act.adapter.GalleryAdapter;
 import com.example.bg_rem.act.app.AppController;
 import com.example.bg_rem.act.model.Image;
 
-
+// GALLERY
 public class SubActivity2 extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
     // 여기 호스트 주소를 aws 주소로 바꿔줘야 한다.
     // http://ec2-13-209-76-218.ap-northeast-2.compute.amazonaws.com:8080
-    private static final String endpoint = "https://fa93740d03cc.ngrok.io/posts/?format=json";
+//    private static final String endpoint = "https://fa93740d03cc.ngrok.io/posts/?format=json";
+    private String endpoint;
     private ArrayList<Image> images;
     private ProgressDialog pDialog;
     private GalleryAdapter mAdapter;
@@ -53,7 +54,10 @@ public class SubActivity2 extends AppCompatActivity {
 
         Intent myIntent = getIntent(); // gets the previously created intent
         String userId = myIntent.getStringExtra("secondKeyName");
+        String addr = myIntent.getStringExtra("server_addr");
         Log.d(TAG,"RECEIVED KEY in SubActivity2 " + userId);
+        endpoint = addr + "/posts/?format=json";
+        Log.d(TAG,"ENDPOINT ADDRESS " + endpoint);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
