@@ -21,7 +21,6 @@
         <activity android:name=".act.activity.listView"></activity>
         <activity android:name=".act.activity.LoadingActivity" />
         <activity android:name=".act.activity.MakeAccount" />
-        <activity android:name=".act.activity.MainActivity2" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" /> <!-- android:networkSecurityConfig="@xml/network_security_config" -->

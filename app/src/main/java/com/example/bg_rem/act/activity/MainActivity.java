@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 // LOGIN PAGE
 public class MainActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
-    private final String addr = "https://894db6b5fb37.ngrok.io";
+    private final String addr = "https://a33cf104cfa6.ngrok.io";
     ImageView imgVwSelected_;
     private Button login, makeAccount;
     private EditText checkID, checkPW;
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
 
-                    Log.d(TAG,"계정 확인 완료용!!"+response.toString());
-                    Toast.makeText(getApplicationContext(),"계정 확인이용!!!!!",Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,"계정 확인 완료"+response.toString());
+                    Toast.makeText(getApplicationContext(),"계정 확인 완료",Toast.LENGTH_SHORT).show();
 
 //                     로그인. Main Activity2 를 호출한다. (갤러리와 이미지 처리 버튼이 나오는 부분이다)
 //                     text view 내의 값들이 db에 있는 경우
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                      startActivity(intent);
                 }else {
                     Log.d(TAG,"Post Status Code ㅠㅠ : " + response.code());
-                    Toast.makeText(getApplicationContext(),"계정 없어용!!!!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"계정이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
                     Log.d(TAG,response.errorBody().toString());
                     Log.d(TAG,call.request().body().toString());
                 }

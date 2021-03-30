@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class listView extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
-    static final String[] LIST_MENU = {"Jacket", "Tops", "Bottoms", "Accs", "Image upload"};
+    static final String[] LIST_MENU = {"Jacket", "Top", "Bottom", "Shoes", "Accs", "Image upload"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

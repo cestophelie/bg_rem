@@ -66,7 +66,7 @@ public class SubActivity extends AppCompatActivity implements AdapterView.OnItem
 
         // ComboBox를 위한 spinner
         spinner = (Spinner)findViewById(R.id.spinner);
-        items = new String[]{"Choose category", "Jacket", "Top", "Bottom", "Accs"};
+        items = new String[]{"Choose category", "Jacket", "Top", "Bottom", "Shoes", "Accs"};
         spinner.setOnItemSelectedListener(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
