@@ -1,3 +1,4 @@
+
 package com.example.bg_rem.act.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +35,7 @@ import com.example.bg_rem.act.adapter.GalleryAdapter;
 import com.example.bg_rem.act.app.AppController;
 import com.example.bg_rem.act.model.Image;
 
-// GALLERY
+// List
 public class SubActivity2 extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
     // 여기 호스트 주소를 aws 주소로 바꿔줘야 한다.
@@ -55,6 +56,7 @@ public class SubActivity2 extends AppCompatActivity {
         Intent myIntent = getIntent(); // gets the previously created intent
         String userId = myIntent.getStringExtra("secondKeyName");
         String addr = myIntent.getStringExtra("server_addr");
+        String category_name = myIntent.getStringExtra("category_name");
         Log.d(TAG,"RECEIVED KEY in SubActivity2 " + userId);
         endpoint = addr + "/posts/?format=json";
         Log.d(TAG,"ENDPOINT ADDRESS " + endpoint);
@@ -74,10 +76,10 @@ public class SubActivity2 extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        fetchImages(userId);
+        fetchImages(userId, category_name);
     }
 
-    private void fetchImages(String userId) {
+    private void fetchImages(String userId, String category_name) {
         // 서버로부터 json fetch
         pDialog.setMessage("Getting images...");
         pDialog.show();
@@ -87,6 +89,7 @@ public class SubActivity2 extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Received JSON from server" + response.toString());
+                        Log.d(TAG, "USER ID HERE" + userId);
                         pDialog.hide();
 
                         images.clear();
@@ -96,10 +99,12 @@ public class SubActivity2 extends AppCompatActivity {
                                 Image image = new Image();
                                 // 여기에 if id가 일치하면, 코드를 넣어줄 수 있을 듯.
                                 if (object.getString("title").equals(userId)) {
-                                    image.setName(object.getString("title"));
-                                    image.setImage(object.getString("image"));
+                                    if (object.getString("category").equals(category_name)) {
+                                        image.setName(object.getString("title"));
+                                        image.setImage(object.getString("image"));
 
-                                    images.add(image);
+                                        images.add(image);
+                                    }
                                 }
 
 

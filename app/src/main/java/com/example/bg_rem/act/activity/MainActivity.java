@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 // LOGIN PAGE
 public class MainActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
-    private final String addr = "https://25c216332f62.ngrok.io";
+    private final String addr = "https://894db6b5fb37.ngrok.io";
     ImageView imgVwSelected_;
     private Button login, makeAccount;
     private EditText checkID, checkPW;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                     로그인. Main Activity2 를 호출한다. (갤러리와 이미지 처리 버튼이 나오는 부분이다)
 //                     text view 내의 값들이 db에 있는 경우
-                     Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
+                     Intent intent = new Intent(getApplicationContext(), listView.class);
                      intent.putExtra("firstKeyName",userId); // Verify된 경우 userId 다음 액티비티로 전달하기
                      intent.putExtra("server_addr", addr);
                      startActivity(intent);
