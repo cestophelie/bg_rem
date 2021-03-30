@@ -57,7 +57,7 @@ public class listView extends AppCompatActivity {
                     intent2.putExtra("category_name", strText);
                     startActivity(intent2);
                 }
-                // TODO : use strText
+
             }
         }) ;
     }
